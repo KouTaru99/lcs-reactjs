@@ -45,6 +45,12 @@ import {
   STextarea,
   SToaster,
   toast,
+  SDialog,
+  SDialogContent,
+  SDialogDescription,
+  SDialogFooter,
+  SDialogHeader,
+  SDialogTitle,
 } from '@/components/shared'
 
 function App() {
@@ -60,6 +66,11 @@ function App() {
     other: false,
   })
   const [comment, setComment] = useState('')
+  const [dialogFormOpen, setDialogFormOpen] = useState(false)
+  const [dialogSubmitting, setDialogSubmitting] = useState(false)
+  const [dialogSubmitted, setDialogSubmitted] = useState(false)
+  const [dialogName, setDialogName] = useState('')
+  const [dialogPhone, setDialogPhone] = useState('')
 
   const reportTagOptions = useMemo(
     () => [
@@ -257,6 +268,31 @@ function App() {
           <SButton variant="destructive">Destructive</SButton>
         </div>
 
+        <div className="mt-4">
+          <SCard>
+            <SCardHeader>
+              <SCardTitle>Dialog form (demo)</SCardTitle>
+              <SCardDescription>
+                Ví dụ dialog có form + validate + state input. Nút Confirm/Cancel lần lượt là
+                primary/secondary.
+              </SCardDescription>
+            </SCardHeader>
+            <SCardContent className="space-y-2">
+              <SButton
+                variant="brand"
+                className="w-full"
+                onClick={() => {
+                  setDialogSubmitted(false)
+                  setDialogSubmitting(false)
+                  setDialogFormOpen(true)
+                }}
+              >
+                Mở dialog form
+              </SButton>
+            </SCardContent>
+          </SCard>
+        </div>
+
         <div className="mt-4 grid grid-cols-2 gap-3">
           <SButton
             variant="success"
@@ -372,6 +408,99 @@ function App() {
       </div>
 
       <SToaster richColors position="top-center" />
+
+      <SDialog
+        open={dialogFormOpen}
+        onOpenChange={(open) => {
+          setDialogFormOpen(open)
+          if (!open) {
+            setDialogSubmitted(false)
+            setDialogSubmitting(false)
+          }
+        }}
+      >
+        <SDialogContent>
+          <SDialogHeader>
+            <SDialogTitle>Thêm liên hệ (demo)</SDialogTitle>
+            <SDialogDescription>
+              Form bất kỳ để dev tham khảo cách làm dialog có state input + validate.
+            </SDialogDescription>
+          </SDialogHeader>
+
+          <div className="mt-4 space-y-3">
+            <div className="space-y-1.5">
+              <div className="text-sm font-medium">Tên</div>
+              <SInput
+                value={dialogName}
+                onChange={(e) => setDialogName(e.target.value)}
+                placeholder="Ví dụ: Nguyễn Văn A"
+                aria-invalid={dialogSubmitted && !dialogName.trim()}
+                className={
+                  dialogSubmitted && !dialogName.trim()
+                    ? 'border-destructive focus-visible:ring-destructive'
+                    : undefined
+                }
+              />
+              {dialogSubmitted && !dialogName.trim() ? (
+                <div className="text-xs text-destructive">Vui lòng nhập tên</div>
+              ) : null}
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-sm font-medium">Số điện thoại</div>
+              <SInput
+                value={dialogPhone}
+                onChange={(e) => setDialogPhone(e.target.value)}
+                placeholder="Ví dụ: 0384 444 678"
+                inputMode="tel"
+                aria-invalid={dialogSubmitted && !dialogPhone.trim()}
+                className={
+                  dialogSubmitted && !dialogPhone.trim()
+                    ? 'border-destructive focus-visible:ring-destructive'
+                    : undefined
+                }
+              />
+              {dialogSubmitted && !dialogPhone.trim() ? (
+                <div className="text-xs text-destructive">Vui lòng nhập số điện thoại</div>
+              ) : null}
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-sm font-medium">Ghi chú (disabled state)</div>
+              <SInput disabled placeholder="Ví dụ: field bị khóa theo nghiệp vụ" />
+            </div>
+          </div>
+
+          <SDialogFooter className="justify-end">
+            <SButton
+              variant="secondary"
+              onClick={() => setDialogFormOpen(false)}
+              disabled={dialogSubmitting}
+            >
+              Cancel
+            </SButton>
+            <SButton
+              variant="primary"
+              onClick={() => {
+                setDialogSubmitted(true)
+                const ok = dialogName.trim() && dialogPhone.trim()
+                if (!ok) return
+
+                setDialogSubmitting(true)
+                // Demo: giả lập submit xong thì đóng
+                setTimeout(() => {
+                  setDialogSubmitting(false)
+                  setDialogFormOpen(false)
+                  toast.success('Đã lưu (demo)')
+                }, 500)
+              }}
+              disabled={dialogSubmitting}
+            >
+              {dialogSubmitting ? 'Đang lưu…' : 'Confirm'}
+            </SButton>
+          </SDialogFooter>
+        </SDialogContent>
+      </SDialog>
     </div>
   )
 }

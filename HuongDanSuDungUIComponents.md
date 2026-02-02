@@ -227,6 +227,73 @@ const [value, setValue] = useState<'annoy' | 'scam'>('scam')
 
 ---
 
+### SDialog & SPresetDialog (Modal/Alert/Confirm)
+
+**Khi dùng**:
+- Modal thông báo (info/success/warning/error)
+- Confirm dialog (cần xác nhận trước khi thực hiện)
+
+**SDialog** là primitives (để custom layout), còn **SPresetDialog** là wrapper theo type phổ biến.
+
+#### Dùng nhanh với `SPresetDialog`
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<SButton variant="brand" onClick={() => setOpen(true)}>
+  Mở dialog
+</SButton>
+
+<SPresetDialog
+  open={open}
+  onOpenChange={setOpen}
+  type="confirm" // info | success | warning | error | confirm
+  title="Xác nhận hành động"
+  description="Bạn có chắc chắn muốn thực hiện?"
+  confirmText="Xác nhận"
+  cancelText="Hủy"
+  hideCancel={false}
+  onConfirm={() => {
+    // có thể async
+    toast.success('Đã confirm')
+  }}
+/>
+```
+
+#### Custom layout với primitives `SDialog*`
+
+```tsx
+<SDialog open={open} onOpenChange={setOpen}>
+  <SDialogContent>
+    <SDialogHeader>
+      <SDialogTitle>Title</SDialogTitle>
+      <SDialogDescription>Description</SDialogDescription>
+    </SDialogHeader>
+
+    {/* Form example + input state */}
+    <div className="mt-4 space-y-3">
+      <div className="space-y-1.5">
+        <div className="text-sm font-medium">Tên</div>
+        <SInput placeholder="Nguyễn Văn A" />
+        {/* error state example */}
+        {/* <SInput className="border-destructive focus-visible:ring-destructive" aria-invalid /> */}
+        {/* <div className="text-xs text-destructive">Vui lòng nhập tên</div> */}
+      </div>
+    </div>
+
+    {/* Buttons: Confirm=primary (đen), Cancel=secondary (xám) */}
+    <SDialogFooter className="justify-end">
+      <SButton variant="secondary" onClick={() => setOpen(false)}>
+        Cancel
+      </SButton>
+      <SButton variant="primary">Confirm</SButton>
+    </SDialogFooter>
+  </SDialogContent>
+</SDialog>
+```
+
+---
+
 ### Toast (SToaster + toast)
 
 **Khi dùng**: thông báo success/error ở đầu màn.
