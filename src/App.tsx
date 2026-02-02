@@ -1,34 +1,72 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { AlertTriangle, CheckCircle2, Search } from 'lucide-react'
+
 import './App.css'
+import {
+  SBadge,
+  SButton,
+  SCard,
+  SCardContent,
+  SCardDescription,
+  SCardFooter,
+  SCardHeader,
+  SCardTitle,
+  SInput,
+} from '@/components/shared'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-dvh bg-background text-foreground">
+      <div className="mx-auto max-w-md px-4 py-6">
+        <div className="mb-6">
+          <div className="text-sm text-muted-foreground">Theme & Shared Components</div>
+          <div className="text-xl font-semibold">UI kit (S-*)</div>
+        </div>
+
+        <SCard className="mb-4">
+          <SCardHeader>
+            <SCardTitle>Tra cứu</SCardTitle>
+            <SCardDescription>Khung demo để validate theme + component dùng chung.</SCardDescription>
+          </SCardHeader>
+          <SCardContent className="space-y-3">
+            <div className="flex gap-2">
+              <SInput placeholder="Số điện thoại / Website" />
+              <SButton variant="primary" className="shrink-0">
+                <Search className="h-4 w-4" />
+                Tra cứu
+              </SButton>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <SBadge variant="brand">Cần cảnh giác</SBadge>
+              <SBadge variant="success">
+                <CheckCircle2 className="mr-1 h-3.5 w-3.5" />
+                An toàn
+              </SBadge>
+              <SBadge variant="warning">
+                <AlertTriangle className="mr-1 h-3.5 w-3.5" />
+                Lưu ý
+              </SBadge>
+            </div>
+          </SCardContent>
+          <SCardFooter className="justify-between">
+            <div className="text-sm text-muted-foreground">Counter: {count}</div>
+            <SButton variant="brand" size="sm" onClick={() => setCount((c) => c + 1)}>
+              +1
+            </SButton>
+          </SCardFooter>
+        </SCard>
+
+        <div className="grid grid-cols-2 gap-3">
+          <SButton variant="secondary">Secondary</SButton>
+          <SButton variant="outline">Outline</SButton>
+          <SButton variant="ghost">Ghost</SButton>
+          <SButton variant="destructive">Destructive</SButton>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
